@@ -1,0 +1,70 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides: Init raspberry php api
+# Required-Start: $local_fs $network
+# Required-Stop: $local_fs
+# Default-Start: 2 3 4 5
+# Default-Stop:
+# Short-Description: Start the raspberry gpio php api
+# Description: Start the raspberry gpio php api
+
+### END INIT INFO
+
+start(){
+	pstatus=$(php /var/www/html/central/.config/status.php)
+	if [ "${pstatus}" -ne '1' ]; then
+		php /var/www/html/central/.config/start.php
+		pstatus=$(php /var/www/html/central/.config/status.php)
+		if [ "${pstatus}" -eq "1" ]; then
+			echo 'Service started correctly' >&2
+		else
+			echo 'Service failed to init, read the log' >&2
+		fi
+	else
+		echo 'Service already running'>&2
+	fi
+}
+
+stop(){
+	pstatus=$(php /var/www/html/central/.config/status.php)
+	if [ "${pstatus}" -eq "1" ]; then
+		php /var/www/html/central/.config/stop.php
+		echo 'Service Stoped' >&2
+	else
+		echo 'Service not Running' >&2
+	fi
+}
+
+status(){
+	tail -10 /var/www/html/central/.config/logfile.log
+	pstatus=$(php /var/www/html/central/.config/status.php)
+	if [ "${pstatus}" -eq "1" ]; then
+		echo 'Service is running correctly' >&2
+	elif [ "${pstatus}" -eq "0" ]; then
+		echo 'Service is not running' >&2
+	elif [ "${pstatus}" -eq "-1" ]; then
+		echo 'Service failed to init, read the log' >&2
+	fi
+}
+
+##case statement to be used to call functions##
+case "$1" in
+start)
+	start
+;;
+stop)
+	stop
+;;
+status)
+	status 
+;;
+restart)
+	stop
+	start
+;;
+*)
+	echo $"Usage: $0 {start|stop|status|restart}"
+	exit 5
+esac
+exit 0

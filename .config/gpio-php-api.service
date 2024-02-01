@@ -1,0 +1,17 @@
+[Unit]
+Description=GPIO PHP Api Service
+#Change the service to the name of which HTTP daemon is installed
+After=network.target apache2.service
+
+[Service]
+ExecStart=/usr/bin/php /var/www/html/central/.config/start.php
+ExecStop=/usr/bin/php /var/www/html/central/.config/stop.php
+Restart=always
+User=pi
+Group=www-data
+Environment=PATH=/usr/bin:/usr/local/bin
+Environment=NODE_ENV=production
+WorkingDirectory=/var/www/html/central/.config/
+
+[Install]
+WantedBy=multi-user.target
