@@ -1,5 +1,5 @@
 # RaspberryPI api gpio control
->This project requires PHP8, SQLite3 and a php compatible httpd(apache2, ngix, LightHTTPd)
+>This project requires PHP8.2(PHP Daemon MUST BE in "gpio" user group), SQLite3 and a php compatible httpd(apache2, ngix, LightHTTPd)
 + ## api.php
     ### Contain a POST JSON based api
     > only accept post method
